@@ -1,25 +1,46 @@
--- CONTROLS
+-- Made by O2Flash20
+
+-- CONTROLS, if you want to add physics for a new server, copy paste them in update like I did for Cubecraft
+-- essentially just do it by eye, that's what I did
+-- also I should mention that it only shows the path it would take if the bow is at full draw
 MaxXVelocity = 3.87
 MaxYVelocity = 3.55
 GravityAcceleration = 0.025
 AirDrag = 0.99
 --
 
-name = "Arrow Hit"
+name = "Arrow Trajectory"
 description = "Shows where your arrow will hit"
 
 showTrail = true
 client.settings.addBool("Show arrow trail", "showTrail")
 renderBehind = false
 client.settings.addBool("Render behind", "renderBehind")
-color = { 0, 255, 255 }
+color = { 0, 255, 255, 100 }
 client.settings.addColor("Color", "color")
 
 importLib("renderthreeD")
 
+function update()
+    -- neither of these are perfect, but good enough
+    if (server.ip() == "mco.cubecraft.net") then
+        MaxXVelocity = 2.9
+        MaxYVelocity = 2.7
+        GravityAcceleration = 0.05
+        AirDrag = 0.99
+    else
+        MaxXVelocity = 3.87
+        MaxYVelocity = 3.55
+        GravityAcceleration = 0.025
+        AirDrag = 0.99
+    end
+end
+
 function render3d()
     px, py, pz = player.pposition()
     rx, ry = player.rotation()
+
+    client.settings.reload()
 
     if renderBehind then gfx.renderBehind(true) end
     gfx.color(color.r, color.g, color.b, color.a)
